@@ -1,7 +1,10 @@
+import geobuf from 'geobuf';
+import Pbf from 'pbf';
 import simplify from 'simplify-geometry';
 import { encode } from '@googlemaps/polyline-codec';
 import { parse as parseDateString } from 'date-fns';
 import { parseStringPromise } from 'xml2js';
+import { gzipSync, unzipSync } from 'zlib';
 
 interface Track {
   departure_time: Date;
@@ -107,4 +110,12 @@ export function parseNMEA(text: string): Track {
       coordinates,
     },
   };
+}
+
+export function compress(geometry: any): Buffer {
+  return gzipSync(geobuf.encode(geometry, new Pbf()));
+}
+
+export function decompress(geometry: Buffer): any {
+  return geobuf.decode(new Pbf(unzipSync(geometry)));
 }
