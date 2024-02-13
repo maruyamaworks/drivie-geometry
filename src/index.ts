@@ -1,7 +1,7 @@
 import geobuf from 'geobuf';
 import Pbf from 'pbf';
 import simplify from 'simplify-geometry';
-import { encode } from '@googlemaps/polyline-codec';
+import { encode } from '@mapbox/polyline';
 import { parse as parseDateString } from 'date-fns';
 import { parseStringPromise } from 'xml2js';
 import { gzipSync, unzipSync } from 'zlib';

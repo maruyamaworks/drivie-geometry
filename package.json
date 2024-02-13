@@ -1,6 +1,6 @@
 {
   "name": "@clerk67/drivie-geometry",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "publishConfig": {
@@ -17,17 +17,18 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@googlemaps/polyline-codec": "^1.0.28",
-    "date-fns": "^2.29.3",
+    "@mapbox/polyline": "^1.2.1",
+    "date-fns": "^3.3.1",
     "geobuf": "^3.0.2",
     "pbf": "^3.2.1",
     "simplify-geometry": "^0.0.2",
-    "xml2js": "^0.4.23"
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
-    "@types/geobuf": "^3.0.1",
-    "@types/pbf": "^3.0.2",
-    "@types/xml2js": "^0.4.11",
-    "typescript": "^5.0.4"
+    "@types/geobuf": "^3.0.4",
+    "@types/mapbox__polyline": "^1.0.5",
+    "@types/pbf": "^3.0.5",
+    "@types/xml2js": "^0.4.14",
+    "typescript": "^5.3.3"
   }
 }
