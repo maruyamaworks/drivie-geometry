@@ -1,6 +1,7 @@
 {
   "name": "@maruyamaworks/drivie-geometry",
-  "version": "0.3.3",
+  "version": "0.3.4",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "publishConfig": {
@@ -18,7 +19,6 @@
   },
   "dependencies": {
     "@mapbox/polyline": "^1.2.1",
-    "date-fns": "^3.3.1",
     "geobuf": "^3.0.2",
     "pbf": "^3.2.1",
     "simplify-geometry": "^0.0.2",

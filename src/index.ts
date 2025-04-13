@@ -1,8 +1,7 @@
 import geobuf from 'geobuf';
 import Pbf from 'pbf';
 import simplify from 'simplify-geometry';
-import { encode } from '@mapbox/polyline';
-import { parse as parseDateString } from 'date-fns';
+import polyline from '@mapbox/polyline';
 import { parseStringPromise } from 'xml2js';
 import { gzipSync, unzipSync } from 'zlib';
 
@@ -38,12 +37,12 @@ export function parseMyTracksCSV(text: string): Track {
     /* longitude */ Number.isNaN(parseFloat(point[3])) ? null : parseFloat(point[3]),
     /* latitude  */ Number.isNaN(parseFloat(point[2])) ? null : parseFloat(point[2]),
     /* altitude  */ Number.isNaN(parseFloat(point[4])) ? null : parseFloat(point[4]),
-    /* timestamp */ (+new Date(point[8]) - +departure) / 1000,
+    /* timestamp */ (new Date(point[8]).getTime() - departure.getTime()) / 1000,
   ]);
 
   return {
     departure_time: departure,
-    overview_polyline: encode(simplify(coordinates, tolerance).map(([lng, lat]) => [lat, lng])),
+    overview_polyline: polyline.encode(simplify(coordinates, tolerance).map(([lng, lat]) => [lat, lng])),
     geometry: {
       type: 'LineString',
       coordinates,
@@ -59,12 +58,12 @@ export async function parseGPX(text: string): Promise<Track> {
     /* longitude */ Number.isNaN(parseFloat(point.$.lon)) ? null : parseFloat(point.$.lon),
     /* latitude  */ Number.isNaN(parseFloat(point.$.lat)) ? null : parseFloat(point.$.lat),
     /* altitude  */ Number.isNaN(parseFloat(point.ele[0])) ? null : parseFloat(point.ele[0]),
-    /* timestamp */ (+new Date(point.time[0]) - +departure) / 1000,
+    /* timestamp */ (new Date(point.time[0]).getTime() - departure.getTime()) / 1000,
   ]);
 
   return {
     departure_time: departure,
-    overview_polyline: encode(simplify(coordinates, tolerance).map(([lng, lat]) => [lat, lng])),
+    overview_polyline: polyline.encode(simplify(coordinates, tolerance).map(([lng, lat]) => [lat, lng])),
     geometry: {
       type: 'LineString',
       coordinates,
@@ -88,23 +87,41 @@ export function parseNMEA(text: string): Track {
   const GPGGA = text.split(/\r?\n/).filter(line => line.startsWith('$GPGGA,'));
 
   const data = GPGGA.map(line => line.split(','));
-  const departure = parseDateString(`${GPRMC.split(',')[9]} ${GPRMC.split(',')[1]}`, 'ddMMyy HHmmss.SSS', new Date());
-  const coordinates = data.map((point: string[]) => {
-    let timestamp = +parseDateString(point[1], 'HHmmss.SSS', departure) - +departure;
+  const [, time,,,,,,,, date] = GPRMC.split(',');
+  const departure = new Date(Date.UTC(
+    parseInt(date.slice(4, 6)) + (parseInt(date.slice(4, 6)) >= 75 ? 1900 : 2000),
+    parseInt(date.slice(2, 4)) - 1,
+    parseInt(date.slice(0, 2)),
+    parseInt(time.slice(0, 2)),
+    parseInt(time.slice(2, 4)),
+    parseInt(time.slice(4, 6)),
+    parseInt(time.slice(7, 10).padEnd(3, '0'))
+  ));
+  const coordinates = data.map(([, time, lat, northOrSouth, lng, eastOrWest,,,, alt]: string[]) => {
+    const date = new Date(Date.UTC(
+      departure.getFullYear(),
+      departure.getMonth(),
+      departure.getDate(),
+      parseInt(time.slice(0, 2)),
+      parseInt(time.slice(2, 4)),
+      parseInt(time.slice(4, 6)),
+      parseInt(time.slice(7, 10).padEnd(3, '0'))
+    ));
+    let timestamp = date.getTime() - departure.getTime();
     while (timestamp < 0) {
       timestamp += 86400000;
     }
     return [
-      /* longitude */ convertLatLng(parseFloat(point[4]), point[5]),
-      /* latitude  */ convertLatLng(parseFloat(point[2]), point[3]),
-      /* altitude  */ Number.isNaN(parseFloat(point[9])) ? null : parseFloat(point[9]),
+      /* longitude */ convertLatLng(parseFloat(lng), eastOrWest),
+      /* latitude  */ convertLatLng(parseFloat(lat), northOrSouth),
+      /* altitude  */ Number.isNaN(parseFloat(alt)) ? null : parseFloat(alt),
       /* timestamp */ timestamp / 1000,
     ];
   });
 
   return {
     departure_time: departure,
-    overview_polyline: encode(simplify(coordinates, tolerance).map(([lng, lat]) => [lat, lng])),
+    overview_polyline: polyline.encode(simplify(coordinates, tolerance).map(([lng, lat]) => [lat, lng])),
     geometry: {
       type: 'LineString',
       coordinates,
