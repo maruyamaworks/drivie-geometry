@@ -1,7 +1,7 @@
 import geobuf from 'geobuf';
 import Pbf from 'pbf';
 import simplify from 'simplify-geometry';
-import polyline from '@googlemaps/polyline-codec';
+import { encode } from '@googlemaps/polyline-codec';
 import { parseStringPromise } from 'xml2js';
 import { gzipSync, unzipSync } from 'zlib';
 
@@ -42,7 +42,7 @@ export function parseMyTracksCSV(text: string): Track {
 
   return {
     departure_time: departure,
-    overview_polyline: polyline.encode(simplify(coordinates, tolerance).map(([lng, lat]) => [lat, lng])),
+    overview_polyline: encode(simplify(coordinates, tolerance).map(([lng, lat]) => [lat, lng])),
     geometry: {
       type: 'LineString',
       coordinates,
@@ -63,7 +63,7 @@ export async function parseGPX(text: string): Promise<Track> {
 
   return {
     departure_time: departure,
-    overview_polyline: polyline.encode(simplify(coordinates, tolerance).map(([lng, lat]) => [lat, lng])),
+    overview_polyline: encode(simplify(coordinates, tolerance).map(([lng, lat]) => [lat, lng])),
     geometry: {
       type: 'LineString',
       coordinates,
@@ -121,7 +121,7 @@ export function parseNMEA(text: string): Track {
 
   return {
     departure_time: departure,
-    overview_polyline: polyline.encode(simplify(coordinates, tolerance).map(([lng, lat]) => [lat, lng])),
+    overview_polyline: encode(simplify(coordinates, tolerance).map(([lng, lat]) => [lat, lng])),
     geometry: {
       type: 'LineString',
       coordinates,
