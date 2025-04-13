@@ -1,6 +1,6 @@
 {
   "name": "@maruyamaworks/drivie-geometry",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,7 +18,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@mapbox/polyline": "^1.2.1",
+    "@googlemaps/polyline-codec": "^1.0.28",
     "geobuf": "^3.0.2",
     "pbf": "^3.2.1",
     "simplify-geometry": "^0.0.2",
@@ -26,7 +26,6 @@
   },
   "devDependencies": {
     "@types/geobuf": "^3.0.4",
-    "@types/mapbox__polyline": "^1.0.5",
     "@types/pbf": "^3.0.5",
     "@types/xml2js": "^0.4.14",
     "typescript": "^5.3.3"
