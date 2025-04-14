@@ -2,7 +2,7 @@
 
 A lightweight and efficient JavaScript library for parsing, simplifying, encoding, and compressing geospatial track data.
 
-Supports multiple GPS data formats including **My Tracks CSV**, **GPX**, and **NMEA**.
+Supports multiple GPS data formats including **MyTracks CSV**, **GPX**, and **NMEA**.
 
 ## Installation
 
@@ -30,7 +30,7 @@ const geometry = {
 
 const compressed = compress(geometry);
 const decompressed = decompress(compressed);
-assert.deepEqual(geometry, decompressed));
+assert.deepEqual(geometry, decompressed);
 ```
 
 ### Parse MyTracks CSV
