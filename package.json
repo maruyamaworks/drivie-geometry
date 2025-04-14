@@ -1,12 +1,14 @@
 {
-  "name": "@maruyamaworks/drivie-geometry",
-  "version": "0.3.6",
+  "name": "@drivie/geometry",
+  "version": "0.4.0",
+  "description": "A lightweight and efficient JavaScript library for parsing, simplifying, encoding, and compressing geospatial track data",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "publishConfig": {
-    "access": "restricted",
-    "registry": "https://npm.pkg.github.com"
-  },
+  "files": [
+    "dist/**/*"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/maruyamaworks/drivie-geometry",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/maruyamaworks/drivie-geometry.git"

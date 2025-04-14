@@ -163,6 +163,8 @@ if (result) {
   console.log(result.departure_time);
   console.log(result.overview_polyline);
   console.log(result.geometry);
+} else {
+  throw new Error('Unsupported format');
 }
 ```
 
